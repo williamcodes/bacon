@@ -15,7 +15,7 @@ Clone this repo. From the root directory, type:
 
 	$ ruby bacon_finder.rb
 	
-This will start the command line interface. From there, just type an actor name and see what comes up. Here are a few to try:
+This will start the command line interface. From there, just type an actor name. Here are a few to try:
 
 ```
 Harrison Ford
