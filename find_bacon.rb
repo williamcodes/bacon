@@ -1,12 +1,11 @@
 require 'JSON'
 
 class Node
-  attr_accessor :name, :image, :neighbors
+  attr_accessor :name, :neighbors
   @@all = {}
 
   def initialize(args)
     @name = args['name']
-    @image = args['image']
     @neighbors = []
     @@all[@name] = self
   end
@@ -22,10 +21,6 @@ class Node
   def bacon?
     name == "Kevin Bacon"
   end
-
-  def neighbors?(node)
-    self.neighbors.include?(node)
-  end
 end
 
 class BaconFinder
@@ -39,8 +34,7 @@ class BaconFinder
   end
 
   def self.load_actors
-    file_names = Dir.entries("./films")
-    file_names.shift(2)
+    file_names = Dir.entries("./films").reject{|name| name.chars.first == '.'}
 
     file_names.each do |file_name|
       json_hash = JSON.parse File.read("./films/#{file_name}")
@@ -60,7 +54,7 @@ class BaconFinder
     until node_queue.empty?
       current_node = node_queue.shift
       traveled_path << current_node
-      return true if current_node.bacon?
+      return pretty_path if current_node.bacon?
 
       node_neighbors = current_node.neighbors
       node_neighbors.each do |neighbor|
@@ -68,8 +62,6 @@ class BaconFinder
         visited_nodes[current_node.name] = true
       end
     end
-
-    return false
   end
 
   def short_path
@@ -77,7 +69,7 @@ class BaconFinder
 
     traveled_path.reverse_each do |this_node|
       last_node = backtrace.first
-      backtrace.unshift(this_node) if last_node.neighbors?(this_node)
+      backtrace.unshift(this_node) if last_node.neighbors.include?(this_node)
     end
 
     return backtrace
@@ -89,22 +81,19 @@ class BaconFinder
   end
 
   def self.cli
+    load_actors
     while true
       puts 'enter an actor name (or type quit):'
       input = gets.chomp
       break if input == 'quit'
 
       if actor = Node.find_by('name' => input)
-        bacon_finder = new(actor)
-        bacon_finder.find_bacon
-        puts bacon_finder.pretty_path
+        puts new(actor).find_bacon
       else
         puts "I don't know that actor. Try again."
       end
-      puts ''
     end
   end
 end
 
-BaconFinder.load_actors
 BaconFinder.cli
