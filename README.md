@@ -2,7 +2,7 @@
 This is a command line application that returns the shortest path from any actor in our data set to Kevin Bacon.
 
 ###Prerequisites
-You will need a recent version of Ruby to run this application. To install on a Mac, type the following into your terminal:
+You will need a recent version of Ruby. To install on a Mac, type the following into your terminal:
 
 ```
 $ curl -L https://get.rvm.io | bash -s stable
